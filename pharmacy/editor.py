@@ -1,23 +1,5 @@
-import asyncio
 import json
 from functools import reduce
-
-
-async def update_data_batch(in_queue: asyncio.Queue, out_queue: asyncio.Queue, rule_key):
-    rule = _get_rule(rule_key)
-    while (data_batch := await in_queue.get()) is not None:
-        update_batch = [
-            rule(item)
-            for item in data_batch
-        ]
-        await out_queue.put(update_batch)
-    await out_queue.put(None)
-
-
-def _get_rule(key):
-    return {
-        'o3': extract_o3_data
-    }.get(key)
 
 
 def extract_o3_data(edited_dict):
