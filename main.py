@@ -18,7 +18,6 @@ SRC_REQUEST_QUERY_FP = os.path.join(os.getcwd(), 'src/o3_request_query.txt')
 
 async def main():
     src_data_queue = asyncio.Queue()
-    updated_data_queue = asyncio.Queue()
 
     filling_queue_task = asyncio.create_task(
         drugs_batch_generator_queue_filling(
@@ -30,24 +29,15 @@ async def main():
         )
     )
 
-    update_data_flow = asyncio.create_task(
-        update_data_batch(
-            src_data_queue,
-            updated_data_queue,
-            'o3'
-        )
-    )
-
     insert_data_flow = asyncio.create_task(
         pharmacy_inserting(
-            updated_data_queue,
+            src_data_queue,
             'o3'
         )
     )
 
     await asyncio.gather(
         filling_queue_task,
-        update_data_flow,
         insert_data_flow,
         return_exceptions=True
     )
