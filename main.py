@@ -1,18 +1,14 @@
 import asyncio
-import codecs
 import os
 
-
-from pharmacy.editor import update_data_batch
+from pharmacy import utils
 from pharmacy.getter import drugs_batch_generator_queue_filling
 from pharmacy.saver import pharmacy_inserting
 
 
-MASKED_SRC_URL = '68747470733a2f2f7777772e7269676c612e72752f6772617068716c'
-
 SRC_MAX_PAGE = 626
 SRC_PAUSE_BETWEEN_FETCH = 2
-SRC_REQUEST_URL = codecs.decode(MASKED_SRC_URL, 'hex').decode()
+SRC_URL_MASKED = '68747470733a2f2f7777772e7269676c612e72752f6772617068716c'
 SRC_REQUEST_QUERY_FP = os.path.join(os.getcwd(), 'src/o3_request_query.txt')
 
 
@@ -25,7 +21,7 @@ async def main():
             pause_between_fetch=SRC_PAUSE_BETWEEN_FETCH,
             request_query_fp=SRC_REQUEST_QUERY_FP,
             src_max_page=SRC_MAX_PAGE,
-            src_url=SRC_REQUEST_URL
+            src_url=utils.decode(SRC_URL_MASKED, 'hex')
         )
     )
 
